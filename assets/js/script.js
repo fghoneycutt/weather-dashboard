@@ -3,10 +3,13 @@ var searches = [];
 
 function search(searchVal){
     getWeather(searchVal);
+    searchVal = prettyName(searchVal);
     createSaveButtons(searchVal);
+    saveSearches();
 }
 
 function getWeather(searchVal){
+    searchVal = searchVal.trim();
     //location api receives lat and lon, plugs them into weather API, which for some reason only takes lat and lon and not location
     var locationApiUrl =
       "http://open.mapquestapi.com/geocoding/v1/address?key=kKR5YQEn8QmWD5fSh9nqAfyD1jOJe5VZ&location=" +
@@ -89,6 +92,7 @@ function prettyName(string) {
 
 //create history buttons after search
 function createSaveButtons(searchVal){
+    searchVal = searchVal.trim();
     if (!searches.includes(searchVal)){
         searches.push(searchVal);
         var btn = document.createElement("button");
@@ -99,7 +103,23 @@ function createSaveButtons(searchVal){
         searchArea.appendChild(btn);
         btn.addEventListener("click", searchFromSave);
     }
-    console.log(searches);
+}
+
+//create history buttons on load
+function createHistoryButtons(){
+    for (var i = 0; i < searches.length; i++){
+        var btn = document.createElement("button");
+        btn.classList = "btn btn-secondary";
+        btn.textContent = searches[i];
+        var searchArea = document.getElementById("search-area");
+        searchArea.appendChild(btn);
+        btn.addEventListener("click", searchFromSave);
+    }
+}
+
+function saveSearches(){
+    localStorage.setItem("searches", JSON.stringify(searches)
+    );
 }
 
 function searchFromSave(){
@@ -113,4 +133,18 @@ function captureSearchVal(){
     search(searchVal);
 }
 
-searchBtn.addEventListener("click", captureSearchVal)
+function loadSearches() {
+    var saved = localStorage.getItem("searches");     
+    saved = JSON.parse(saved);     
+    if (saved){         
+        searches = saved;         
+    } else {
+        searches = [];
+    }
+    console.log(searches); 
+    createHistoryButtons();
+}
+
+
+searchBtn.addEventListener("click", captureSearchVal);
+loadSearches();
