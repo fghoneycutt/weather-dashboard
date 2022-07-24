@@ -1,8 +1,7 @@
 var searchBtn = document.getElementById("searchBtn");
+var searches = [];
 
-function search(){
-    var searchVal = document.getElementById("input").value;
-    document.getElementById("input").value = "";
+function search(searchVal){
     getWeather(searchVal);
     createSaveButtons(searchVal);
 }
@@ -90,18 +89,28 @@ function prettyName(string) {
 
 //create history buttons after search
 function createSaveButtons(searchVal){
-    var btn = document.createElement("button");
-    btn.classList = "btn btn-secondary"
-    searchVal = prettyName(searchVal);
-    btn.textContent = searchVal;
-    var searchArea = document.getElementById("search-area");
-    searchArea.appendChild(btn);
-    btn.addEventListener("click", searchFromSave);
+    if (!searches.includes(searchVal)){
+        searches.push(searchVal);
+        var btn = document.createElement("button");
+        btn.classList = "btn btn-secondary"
+        searchVal = prettyName(searchVal);
+        btn.textContent = searchVal;
+        var searchArea = document.getElementById("search-area");
+        searchArea.appendChild(btn);
+        btn.addEventListener("click", searchFromSave);
+    }
+    console.log(searches);
 }
 
 function searchFromSave(){
-    var inputVal = this.textContent;
-    console.log(inputVal);
+    var searchVal = this.textContent;
+    search(searchVal);
 }
 
-searchBtn.addEventListener("click", search)
+function captureSearchVal(){
+    var searchVal = document.getElementById("input").value;
+    document.getElementById("input").value = "";
+    search(searchVal);
+}
+
+searchBtn.addEventListener("click", captureSearchVal)
