@@ -1,5 +1,4 @@
 var searchBtn = document.getElementById("searchBtn");
-var searchArea = document.getElementById("search-area");
 
 function search(){
     var searchVal = document.getElementById("input").value;
@@ -75,7 +74,7 @@ function displayWeather(data, city){
 }
 
 function displayForecast(data){
-    console.log("reached");
+    console.log("reached forecast function");
 }
 
 //function to make the input city name uniform for display
@@ -97,11 +96,12 @@ function createSaveButtons(searchVal){
     btn.textContent = searchVal;
     var searchArea = document.getElementById("search-area");
     searchArea.appendChild(btn);
+    btn.addEventListener("click", searchFromSave);
 }
 
 function searchFromSave(){
-    console.log("reached");
+    var inputVal = this.textContent;
+    console.log(inputVal);
 }
 
 searchBtn.addEventListener("click", search)
-searchArea.addEventListener("click", searchFromSave);
