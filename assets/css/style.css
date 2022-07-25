@@ -28,3 +28,9 @@ header{
     background-color: red;
     padding: 5px;
 }
+.btn{
+    max-height: 40px;
+}
+input{
+    max-height: 40px;
+}

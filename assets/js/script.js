@@ -3,7 +3,6 @@ var searches = [];
 
 function search(searchVal){
     getWeather(searchVal);
-    searchVal = prettyName(searchVal);
     saveSearches();
 }
 
@@ -29,10 +28,6 @@ function getWeather(searchVal){
               "&units=imperial&appid=4852546d34bdfbce6e737eb8f7262605";
             fetch(weatherApiUrl).then(function(response){
                 response.json().then(function(data){
-                    // figure out an error message if invalid
-                    // if (data.count == 0){
-                    //     window.alert("Invalid city, please try again.");
-                    // }
                     displayWeather(data, searchVal);
                 })
             })
@@ -131,7 +126,6 @@ function displayForecast(data){
         forecast.appendChild(cardDiv);
 
     }
-    console.log(data);
 }
 
 //function to make the input city name uniform for display
@@ -150,6 +144,7 @@ function createSaveButtons(searchVal){
     searchVal = searchVal.trim();
     if (!searches.includes(searchVal)){
         searches.push(searchVal);
+        saveSearches();
         var btn = document.createElement("button");
         btn.classList = "btn btn-secondary"
         searchVal = prettyName(searchVal);
@@ -202,3 +197,11 @@ function loadSearches() {
 
 searchBtn.addEventListener("click", captureSearchVal);
 loadSearches();
+//search when you press enter
+var input = document.getElementById("input");
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("searchBtn").click();
+  }
+});
