@@ -1,0 +1,18 @@
+body{
+    margin: 5px;
+}
+header{
+    text-align: center;
+    background-image: linear-gradient(to right, #036ffc, #01306e);
+    color: white;
+    font-size: xx-large;
+    font-weight: bold;
+}
+#forecast{
+    display: flex;
+}
+.card{
+    color: white;
+    background-color: #01345e;
+    margin: 5px;
+}

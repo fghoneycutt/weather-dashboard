@@ -10,14 +10,12 @@ function search(searchVal){
 
 function getWeather(searchVal){
     searchVal = searchVal.trim();
-    //location api receives lat and lon, plugs them into weather API, which for some reason only takes lat and lon and not location
     var locationApiUrl =
-      "http://open.mapquestapi.com/geocoding/v1/address?key=kKR5YQEn8QmWD5fSh9nqAfyD1jOJe5VZ&location=" +
-      searchVal;
+      "https://api.openweathermap.org/data/2.5/weather?q=" + searchVal + "&units=imperial&appid=4852546d34bdfbce6e737eb8f7262605"
     fetch(locationApiUrl).then(function(response){
         response.json().then(function(data){
-            var lat = data.results[0].locations[0].displayLatLng.lat;
-            var lon = data.results[0].locations[0].displayLatLng.lng;
+            var lat = data.coord.lat;
+            var lon = data.coord.lon;
             var weatherApiUrl =
               "https://api.openweathermap.org/data/2.5/onecall?lat=" +
               lat +
@@ -60,6 +58,10 @@ function displayWeather(data, city){
       thisDay.getFullYear() + ")"
     h2El.textContent = city + " " + date;
     today.appendChild(h2El);
+    var icon = data.current.weather[0].icon;
+    var iconEl = document.createElement("img")
+    iconEl.src = "https://openweathermap.org/img/wn/" + icon + "@2x.png";
+    h2El.appendChild(iconEl);
     var tempEl = document.createElement("h3")
     tempEl.textContent = "Temp: " + temp + "\u00B0 F";
     today.appendChild(tempEl);
@@ -76,7 +78,47 @@ function displayWeather(data, city){
 }
 
 function displayForecast(data){
-    console.log("reached forecast function");
+    var weatherData = document.getElementById("weather-data");
+    var forecast = document.createElement("div");
+    forecast.setAttribute("id", "forecast");
+    var text = document.createElement("h2");
+    text.textContent = "5-Day Forecast:"
+    weatherData.appendChild(text);
+    weatherData.appendChild(forecast);
+    for (var i = 0; i < 5; i++){
+        var today = new Date();
+        var newDay = new Date(today)
+        newDay.setDate(newDay.getDate() + (i + 1));
+        var date =
+          (newDay.getMonth() + 1) +
+          "/" +
+          newDay.getDate() +
+          "/" +
+          newDay.getFullYear();
+        var temp = data.daily[i].temp.day;
+        var wind = data.daily[i].wind_speed;
+        var humidity = data.daily[i].humidity;
+        var icon = data.daily[i].weather[0].icon;
+        var iconUrl = "https://openweathermap.org/img/wn/" + icon + "@2x.png"
+        var cardDiv = document.createElement("div");
+        cardDiv.setAttribute("class", "card");
+        cardDiv.setAttribute("style", "width: 15rem;")
+        cardDiv.innerHTML =
+          "<div class='card-body'><h5 class='card-title'>" +
+          date +
+          "<br><img src='" +
+          iconUrl + 
+          "'></h5><p class='card-text'>Temp: " +
+          temp +
+          "\u00B0 F <br>Wind: " +
+          wind +
+          " MPH <br>Humidity: "+
+          humidity + 
+          "%</p> </div>";
+        forecast.appendChild(cardDiv);
+
+    }
+    console.log(data);
 }
 
 //function to make the input city name uniform for display
@@ -141,7 +183,6 @@ function loadSearches() {
     } else {
         searches = [];
     }
-    console.log(searches); 
     createHistoryButtons();
 }
 
