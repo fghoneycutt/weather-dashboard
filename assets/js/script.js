@@ -4,7 +4,6 @@ var searches = [];
 function search(searchVal){
     getWeather(searchVal);
     searchVal = prettyName(searchVal);
-    createSaveButtons(searchVal);
     saveSearches();
 }
 
@@ -14,6 +13,12 @@ function getWeather(searchVal){
       "https://api.openweathermap.org/data/2.5/weather?q=" + searchVal + "&units=imperial&appid=4852546d34bdfbce6e737eb8f7262605"
     fetch(locationApiUrl).then(function(response){
         response.json().then(function(data){
+            if (data.cod === "404"){
+                window.alert("Invalid city, please try again");
+                return;
+            }
+            searchVal = prettyName(searchVal);
+            createSaveButtons(searchVal);
             var lat = data.coord.lat;
             var lon = data.coord.lon;
             var weatherApiUrl =
