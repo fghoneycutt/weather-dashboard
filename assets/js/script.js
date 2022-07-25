@@ -72,8 +72,16 @@ function displayWeather(data, city){
     humidityEl.textContent = "Humidity: " + humidity + "%";
     today.appendChild(humidityEl);
     var uviEl = document.createElement("h3")
-    uviEl.textContent = "UV Index: " + uvi;
     today.appendChild(uviEl);
+    uviEl.innerHTML ="<p>UV Index: <span id='highlight'>" + uvi + "</span></p>";
+    var highlight = document.getElementById("highlight");
+    if (uvi <= 2){
+        highlight.classList.add("favorable");
+    } else if (uvi <= 5){
+        highlight.classList.add("moderate");
+    } else {
+        highlight.classList.add("severe");
+    }
     displayForecast(data);
 }
 
